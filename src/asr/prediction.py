@@ -20,14 +20,19 @@ def get_asr_prediction(waveform: np.ndarray) -> RawAsrPrediction:
 def align_asr_prediction(waveform: np.ndarray,
                          transcription: RawAsrPrediction) -> str:
     
-    align_model, metadata = align_models_metadata[transcription["language"]]
-    align_result = whisperx.align(transcript=transcription["segments"], 
-                                model=align_model, 
-                                align_model_metadata=metadata, 
-                                audio=waveform, 
-                                device=settings.DEVICE, 
-                                return_char_alignments=False)
-    
-    text = ''.join([segment["text"] for segment in align_result["segments"]])
+    text = None
+    if transcription["language"] in settings.AVAILABLE_LANGUAGES:
+
+        align_model, metadata = align_models_metadata[transcription["language"]]
+        align_result = whisperx.align(
+            transcript=transcription["segments"], 
+            model=align_model, 
+            align_model_metadata=metadata, 
+            audio=waveform, 
+            device=settings.DEVICE, 
+            return_char_alignments=False
+        )
+        
+        text = ''.join([segment["text"] for segment in align_result["segments"]])
 
     return text
