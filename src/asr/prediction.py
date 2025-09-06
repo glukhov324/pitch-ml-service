@@ -1,38 +1,22 @@
-import whisperx
 import numpy as np
 
-from src.asr.models import model_whisper, align_models_metadata
-from src.settings import settings
-from src.schemas import RawAsrPrediction
+from src.asr.models import whisper_model
+from src.asr.utils import segments_to_sentences
+from src.config import settings
 
 
 
-def get_asr_prediction(waveform: np.ndarray) -> RawAsrPrediction:
+def get_asr_prediction(audio_bytes: np.ndarray):
     
-    transcription = model_whisper.transcribe(
-        audio=waveform,
-        batch_size=settings.BATCH_SIZE
+    segments, _ = whisper_model.transcribe(
+        audio=audio_bytes, 
+        beam_size=settings.WHISPER_BEAM_SIZE
     )
 
-    return transcription
-
-
-def align_asr_prediction(waveform: np.ndarray,
-                         transcription: RawAsrPrediction) -> str:
+    res_segments = [{"start": round(elem.start, settings.WHISPER_TIME_ROUND),
+                     "end": round(elem.end, settings.WHISPER_TIME_ROUND),
+                     "text": elem.text} for elem in segments]
     
-    text = None
-    if transcription["language"] in settings.AVAILABLE_LANGUAGES:
+    asr_result = segments_to_sentences(res_segments)
 
-        align_model, metadata = align_models_metadata[transcription["language"]]
-        align_result = whisperx.align(
-            transcript=transcription["segments"], 
-            model=align_model, 
-            align_model_metadata=metadata, 
-            audio=waveform, 
-            device=settings.DEVICE, 
-            return_char_alignments=False
-        )
-        
-        text = ''.join([segment["text"] for segment in align_result["segments"]])
-
-    return text
+    return asr_result

@@ -1,6 +1,6 @@
 import uvicorn
 import os
-from src.settings import settings
+from src.config import settings
 
 
 

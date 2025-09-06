@@ -1,11 +1,12 @@
-torch==2.1.2 
-torchvision==0.16.2 
-torchaudio==2.1.2 
---extra-index-url https://download.pytorch.org/whl/cu121
-pydantic_settings==2.9.1
-fastapi==0.115.12
-uvicorn==0.34.2
-python-multipart==0.0.20
+faster-whisper==1.2.0
+torch==2.2.1 
+torchvision==0.17.1 
+torchaudio==2.2.1 
+--extra-index-url https://download.pytorch.org/whl/cu118
 numpy==1.26.3
 librosa==0.11.0
-transformers==4.51.3
+transformers==4.56.0
+fastapi==0.115.12
+pydantic_settings==2.9.1
+uvicorn==0.34.2
+python-multipart==0.0.20

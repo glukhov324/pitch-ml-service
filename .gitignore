@@ -5,3 +5,4 @@ venv
 .env
 logs
 .temp
+*.ipynb

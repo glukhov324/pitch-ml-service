@@ -1,18 +1,17 @@
-import whisperx
-from src.settings import settings
+from faster_whisper import WhisperModel
+from src.config import settings
 
 
 
-model_whisper = whisperx.load_model(
-    whisper_arch=settings.WHISPER_ARCH,
-    device=settings.DEVICE,
-    compute_type=settings.COMPUTE_TYPE
+# Run on GPU with FP16
+# model = WhisperModel(model_size, device="cuda", compute_type="float16")
+
+# or run on GPU with INT8
+# model = WhisperModel(model_size, device="cuda", compute_type="int8_float16")
+# or run on CPU with INT8
+
+whisper_model = WhisperModel(
+    model_size_or_path=settings.WHISPER_MODEL_SIZE, 
+    device=settings.DEVICE, 
+    compute_type=settings.WHISPER_COMPUTE_TYPE
 )
-
-align_model_en, metadata_en = whisperx.load_align_model(language_code="en", device=settings.DEVICE)
-align_model_ru, metadata_ru = whisperx.load_align_model(language_code="ru", device=settings.DEVICE)
-
-align_models_metadata = {
-    "ru": (align_model_ru, metadata_ru),
-    "en": (align_model_en, metadata_en)
-}
