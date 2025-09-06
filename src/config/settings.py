@@ -27,7 +27,7 @@ class Settings(BaseSettings):
     WHISPER_MODEL_SIZE: str = Field("medium")
     WHISPER_COMPUTE_TYPE: str = Field("int8")
     WHISPER_BEAM_SIZE: int = Field(5)
-    WHISPER_TIME_ROUND: int = Field(2)
+    FLOAT_ROUND_RATE: int = Field(2)
     SER_MODEL_NAME: str
     SER_SAMPLING_RATE: int
 

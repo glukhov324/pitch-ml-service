@@ -1,11 +1,11 @@
-from typing import List
+from typing import List, Tuple
 import numpy as np
 import torch
 import torch.nn.functional as F
 
 from src.ser.models import feature_extractor, ser_model, config
 from src.ser.utils import get_audio_interval
-from src.schemas.speech import AsrSegment
+from src.schemas.speech import AsrSegment, AsrEmotionSegment
 from src.config import settings, emotion_type_dict
 
 
@@ -27,7 +27,10 @@ def predict_emotion(speech_array: str,
     logits = ser_model(**inputs).logits
 
     scores = F.softmax(logits, dim=1).detach().cpu().numpy()[0]
-    outputs = [{"emotion": emotion_type_dict[config.id2label[i]], "score": f"{round(score * 100, 3):.1f}%"} for i, score in enumerate(scores)]
+    outputs = [{
+        "emotion": emotion_type_dict[config.id2label[i]], 
+        "score": f"{round(score * 100, settings.FLOAT_ROUND_RATE):.1f}%"
+        } for i, score in enumerate(scores)]
 
     sorted_outputs = sorted(
         outputs,
@@ -38,15 +41,17 @@ def predict_emotion(speech_array: str,
 
 
 
-def predict_emotion_full_audio(speech_array: np.ndarray,
-                               sentences: List[AsrSegment]):
+def get_all_emotions_with_speech_rate(speech_array: np.ndarray,
+                                      sentences: List[AsrSegment]) -> Tuple[List[AsrEmotionSegment], float]:
     
+    total_words = 0
+    total_duration_sec = 0.0
+    wpe = 0
+
     for i in range(len(sentences)):
         elem = sentences[i]
-        print(f"Начало: {elem['start']}, конец: {elem['end']}")
-
-        start = int(elem['start'])
-        end = int(elem['end'])
+        start = int(elem["start"])
+        end = int(elem["end"])
 
         res = predict_emotion(
             speech_array=speech_array,
@@ -55,5 +60,10 @@ def predict_emotion_full_audio(speech_array: np.ndarray,
             end=end
         )
         sentences[i]["emotion_data"] = res
+        total_duration_sec += elem["end"] - elem["start"]
+        total_words += len(elem["text"].split())
     
-    return sentences
+    if total_words:
+        wpe = round((total_words / total_duration_sec) * 60, settings.FLOAT_ROUND_RATE)
+
+    return (sentences, wpe)

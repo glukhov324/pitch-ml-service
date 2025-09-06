@@ -13,8 +13,8 @@ def get_asr_prediction(audio_bytes: np.ndarray):
         beam_size=settings.WHISPER_BEAM_SIZE
     )
 
-    res_segments = [{"start": round(elem.start, settings.WHISPER_TIME_ROUND),
-                     "end": round(elem.end, settings.WHISPER_TIME_ROUND),
+    res_segments = [{"start": round(elem.start, settings.FLOAT_ROUND_RATE),
+                     "end": round(elem.end, settings.FLOAT_ROUND_RATE),
                      "text": elem.text} for elem in segments]
     
     asr_result = segments_to_sentences(res_segments)

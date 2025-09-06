@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import List
 
 
 
@@ -18,3 +19,7 @@ class EmotionBase(BaseModel):
     
 class AsrEmotionSegment(AsrSegment):
     emotion_data: EmotionBase
+
+class SpeechAnalyseResult(BaseModel):
+    speech_segments: List[AsrEmotionSegment]
+    temp_rate: float
