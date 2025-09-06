@@ -1,1 +1,1 @@
-from src.routers.asr import router as asr_router
+from src.routers.speech_stats import router as speech_router

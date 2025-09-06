@@ -1,0 +1,1 @@
+from src.ser.prediction import predict_emotion_full_audio

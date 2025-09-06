@@ -1,7 +1,7 @@
 import datetime
 import os
 import logging
-from src.settings import settings
+from src.config import settings
 
 
 
