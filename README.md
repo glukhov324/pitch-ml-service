@@ -10,4 +10,4 @@ docker compose build
 docker compose up
 ```
 
-Документация сервиса будет доступна по ссылке http://{HOST}:{PORT}⁠/docs
+Документация сервиса будет доступна по ссылке `http://{HOST}:{PORT}⁠/docs`
