@@ -24,6 +24,9 @@ async def analyze_audio_file(audio_file: UploadFile):
     resampler = torchaudio.transforms.Resample(_sampling_rate)
     speech_array_res = resampler(speech_array).squeeze().numpy()
 
+    if len(speech_array_res.shape) > 1:
+        speech_array_res = speech_array_res[0]
+
     logger.info("Start ASR process")
     asr_prediction = get_asr_prediction(speech_array_res)
     logger.info("End ASR process")

@@ -6,11 +6,11 @@ from src.config import settings
 
 
 
-def get_asr_prediction(audio_bytes: np.ndarray):
+def get_asr_prediction(speech_array: np.ndarray):
     
     segments, _ = whisper_model.transcribe(
-        audio=audio_bytes, 
-        beam_size=settings.WHISPER_BEAM_SIZE
+        audio=speech_array, 
+        beam_size=settings.WHISPER_BEAM_SIZE,
     )
 
     res_segments = [{"start": round(elem.start, settings.FLOAT_ROUND_RATE),
