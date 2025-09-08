@@ -8,7 +8,7 @@ from src.logger import logger
 
 
 
-def presentation_analyze_pypeline(speech_text: str,
+def presentation_analyze_pipeline(speech_text: str,
                                   pptx_bytes: io.BytesIO):
     """
     Анализируем PPTX (извлечение → базовые метрики → DeepSeek-оценка соответствия/баланса)

@@ -4,7 +4,7 @@ import io
 
 from src.logger import logger
 from src.llm.pitch_text import pitch_text_analyze_pipeline
-from src.llm.presentation.pypeline import presentation_analyze_pypeline
+from src.llm.presentation.pipeline import presentation_analyze_pipeline
 from src.schemas import PitchEvaluationResult
 
 
@@ -30,7 +30,7 @@ async def analyze_pitch_text(text: str,
     pptx_data = await presentation.read()
     pptx_bytes = io.BytesIO(pptx_data)
 
-    response = presentation_analyze_pypeline(
+    response = presentation_analyze_pipeline(
         speech_text=text,
         pptx_bytes=pptx_bytes
     )

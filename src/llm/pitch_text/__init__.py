@@ -1,1 +1,1 @@
-from src.llm.pitch_text.pypeline import pitch_text_analyze_pipeline
+from src.llm.pitch_text.pipeline import pitch_text_analyze_pipeline
