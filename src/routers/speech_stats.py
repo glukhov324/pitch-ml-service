@@ -32,14 +32,14 @@ async def get_speech_transcription(audio_file: UploadFile):
 
 @router.post("/get_speech_metrics", response_model=SpeechAnalyseResult)
 async def get_speech_metrics(audio_file: UploadFile = File(...),
-                             text_timestamps: List[AsrSegment] = Depends(parse_segments_json)):
+                             asr_result: List[AsrSegment] = Depends(parse_segments_json)):
     
     speech_array_res = await prepare_audio(audio_file)
 
     logger.info("Start statistic generation process")
     response = compute_speech_metrics(
         speech_array=speech_array_res,
-        sentences=text_timestamps
+        sentences=asr_result
     )
     logger.info("End statistic generation process")
 
