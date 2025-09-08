@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     HOST: str = Field("0.0.0.0")
     PORT: int = Field(5000)
     DEV_MODE: bool = Field(False)
-    SERVICE_NAME: str = Field("Speech Service")
+    SERVICE_NAME: str = Field("Pitch ML Service")
     API_V1_STR: str = Field("/api/v1")
 
     # Logging
@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     LOG_FILE: str = Field("logs.log")
     LOG_LEVEL: int = logging.INFO
 
-    # Models
+    # # Speech models
     DEVICE: str = Field("cuda" if torch.cuda.is_available() else "cpu")
     NUM_WORKERS: int = Field(2)
     NUM_THREADS: int = Field(2)
@@ -32,6 +32,15 @@ class Settings(BaseSettings):
     FLOAT_ROUND_RATE: int = Field(2)
     SER_MODEL_NAME: str
     SER_SAMPLING_RATE: int
+
+    # LLM
+    OPENROUTER_API_KEY: str
+    OPENROUTER_URL: str
+    MODEL_ID: str
+    TEMPERATURE: float = Field(0.2)
+    MAX_TOKENS: int = Field(200)
+    OPENROUTER_RETRIES: int = Field(2)
+    OPENROUTE_TIMEOUT: int = Field(120)
 
 
 

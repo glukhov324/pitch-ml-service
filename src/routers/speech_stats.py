@@ -5,16 +5,16 @@ from typing import List
 
 from src.asr import get_asr_prediction
 from src.ser import get_all_emotions_with_speech_rate
-from src.schemas import  AsrEmotionSegment, SpeechAnalyseResult
+from src.schemas import  SpeechAnalyseResult
 from src.logger import logger
 
 
 
 
-router = APIRouter(prefix="/analyze_speech")
+router = APIRouter(prefix="/speech")
 
 
-@router.post("/by_audio_file", response_model=SpeechAnalyseResult)
+@router.post("/get_speech_analytics", response_model=SpeechAnalyseResult)
 async def analyze_audio_file(audio_file: UploadFile):
     
     audio_data = await audio_file.read()
