@@ -58,7 +58,6 @@ def pitch_text_analyze_pipeline(base_text: str,
 
     # Возврат итогов
     return {
-        "context": context,
         "pitch_evaluation": evaluation,
         "advices": advice,
         "pitch_summary": summary

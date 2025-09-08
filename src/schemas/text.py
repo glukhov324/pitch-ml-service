@@ -29,7 +29,6 @@ class Advice(BaseModel):
 
 
 class PitchEvaluationResult(BaseModel):
-    context: Context
     pitch_evaluation: CompletePitchMarksBlock
     advices: List[Advice]
     pitch_summary: str
