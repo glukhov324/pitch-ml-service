@@ -1,5 +1,6 @@
 import json
 import re
+import io
 from typing import List
 from pptx import Presentation
 
@@ -27,9 +28,9 @@ def split_sentences(text: str) -> List[str]:
     return [s for s in re.split(r'(?<=[\.\!\?])\s+', text.strip()) if s]
 
 
-def get_slides_data(path: str):
+def get_slides_data(pptx_bytes: io.BytesIO):
 
-    prs = Presentation(path)
+    prs = Presentation(pptx_bytes)
     slides_data = []
     for i, slide in enumerate(prs.slides, start=1):
         text = []

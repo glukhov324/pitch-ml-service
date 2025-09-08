@@ -32,3 +32,7 @@ class PitchEvaluationResult(BaseModel):
     pitch_evaluation: CompletePitchMarksBlock
     advices: List[Advice]
     pitch_summary: str
+
+
+class QuestionGeneration(BaseModel):
+    questions: List[str]
