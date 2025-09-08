@@ -28,11 +28,11 @@ async def analyze_pitch_text(text: str,
                              presentation: UploadFile):
     
     pptx_data = await presentation.read()
-    audio_stream = io.BytesIO(pptx_data)
+    pptx_bytes = io.BytesIO(pptx_data)
 
     response = presentation_analyze_pypeline(
         speech_text=text,
-        pptx_bytes=audio_stream
+        pptx_bytes=pptx_bytes
     )
 
     return response
