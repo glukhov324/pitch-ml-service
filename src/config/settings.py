@@ -24,6 +24,8 @@ class Settings(BaseSettings):
 
     # Models
     DEVICE: str = Field("cuda" if torch.cuda.is_available() else "cpu")
+    NUM_WORKERS: int = Field(2)
+    NUM_THREADS: int = Field(2)
     WHISPER_MODEL_SIZE: str = Field("medium")
     WHISPER_COMPUTE_TYPE: str = Field("int8")
     WHISPER_BEAM_SIZE: int = Field(5)
