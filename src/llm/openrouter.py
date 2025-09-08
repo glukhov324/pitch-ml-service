@@ -12,7 +12,7 @@ def call_openrouter(messages: List[Dict[str, str]],
                     temperature: float = settings.TEMPERATURE,
                     max_tokens: int = settings.MAX_TOKENS,
                     retries: int = settings.OPENROUTER_RETRIES,
-                    timeout: int = settings.OPENROUTE_TIMEOUT) -> str:
+                    timeout: int = settings.OPENROUTER_TIMEOUT) -> str:
     """Устойчивый вызов OpenRouter: ретраи на 429/5xx, именованные аргументы поддерживаются."""
 
     headers = {

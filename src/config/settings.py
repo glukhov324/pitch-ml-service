@@ -40,7 +40,7 @@ class Settings(BaseSettings):
     TEMPERATURE: float = Field(0.2)
     MAX_TOKENS: int = Field(200)
     OPENROUTER_RETRIES: int = Field(2)
-    OPENROUTE_TIMEOUT: int = Field(120)
+    OPENROUTER_TIMEOUT: int = Field(120)
 
 
 
