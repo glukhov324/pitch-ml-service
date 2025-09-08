@@ -1,25 +1,25 @@
 from pydantic import BaseModel
-from typing import List
 
 
 
-class TimestampBase(BaseModel):
+class Timestamp(BaseModel):
     start: float
     end: float
 
 
-class AsrSegment(TimestampBase):
+class AsrSegment(Timestamp):
     text: str
 
 
-class EmotionBase(BaseModel):
+class EmotionPrediction(BaseModel):
     emotion: str
     score: str
 
     
 class AsrEmotionSegment(AsrSegment):
-    emotion_data: EmotionBase
+    emotion_data: EmotionPrediction
 
 class SpeechAnalyseResult(BaseModel):
-    speech_segments: List[AsrEmotionSegment]
     temp_rate: float
+    emotion_mark: float
+    avg_sentences_len: float

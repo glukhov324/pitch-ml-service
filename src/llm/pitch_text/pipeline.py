@@ -9,8 +9,8 @@ from src.logger import logger
 
 
 def pitch_text_analyze_pipeline(base_text: str,
-                             rounds: int = 3,
-                             ask_gate: bool = True) -> Dict[str, Any]:
+                                rounds: int = 3,
+                                ask_gate: bool = True) -> Dict[str, Any]:
     """
     Обязательный порядок:
     текст -> LLM -> вопрос -> ответ (до 2–3 итераций, с пропуском) -> оценка -> советы -> резюме

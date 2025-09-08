@@ -1,1 +1,1 @@
-from src.ser.prediction import get_all_emotions_with_speech_rate
+from src.ser.prediction import compute_speech_metrics

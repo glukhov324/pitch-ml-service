@@ -5,7 +5,7 @@ import torch.nn.functional as F
 
 from src.ser.models import feature_extractor, ser_model, config
 from src.ser.utils import get_audio_interval
-from src.schemas.speech import AsrSegment, AsrEmotionSegment
+from src.schemas.speech import AsrSegment, SpeechAnalyseResult, EmotionPrediction
 from src.config import settings, emotion_type_dict
 
 
@@ -14,7 +14,7 @@ from src.config import settings, emotion_type_dict
 def predict_emotion(speech_array: str, 
                     sampling_rate: int, 
                     start: int, 
-                    end: int):
+                    end: int) -> EmotionPrediction:
     
     speech = get_audio_interval(
         speech_array=speech_array,
@@ -22,7 +22,12 @@ def predict_emotion(speech_array: str,
         end=end
     )
 
-    inputs = feature_extractor(speech, sampling_rate=sampling_rate, return_tensors="pt", padding=True)
+    inputs = feature_extractor(
+        raw_speech=speech, 
+        sampling_rate=sampling_rate, 
+        return_tensors="pt", 
+        padding=True
+    )
     inputs = {key: inputs[key].to(settings.DEVICE) for key in inputs}
     logits = ser_model(**inputs).logits
 
@@ -37,33 +42,55 @@ def predict_emotion(speech_array: str,
         key=lambda x: float(x["score"].rstrip("%")),
         reverse=True
     )
+
     return sorted_outputs[0]
 
 
 
-def get_all_emotions_with_speech_rate(speech_array: np.ndarray,
-                                      sentences: List[AsrSegment]) -> Tuple[List[AsrEmotionSegment], float]:
-    
+def compute_speech_metrics(speech_array: np.ndarray,
+                           sentences: List[AsrSegment]) -> SpeechAnalyseResult:
+
+    if not sentences:
+        return SpeechAnalyseResult(
+            temp_rate=0.0,
+            emotion_mark=0.0,
+            avg_sentences_len=0.0
+        ).model_dump()
+
     total_words = 0
     total_duration_sec = 0.0
-    wpe = 0
+    emotional_speech_count = 0
 
-    for i in range(len(sentences)):
-        elem = sentences[i]
-        start = int(elem["start"])
-        end = int(elem["end"])
+    for sentence in sentences:
+        start_ms = int(sentence["start"])
+        end_ms = int(sentence["end"])
 
-        res = predict_emotion(
+        emotion_result = predict_emotion(
             speech_array=speech_array,
             sampling_rate=settings.SER_SAMPLING_RATE,
-            start=start,
-            end=end
+            start=start_ms,
+            end=end_ms
         )
-        sentences[i]["emotion_data"] = res
-        total_duration_sec += elem["end"] - elem["start"]
-        total_words += len(elem["text"].split())
-    
-    if total_words:
-        wpe = round((total_words / total_duration_sec) * 60, settings.FLOAT_ROUND_RATE)
 
-    return (sentences, wpe)
+        sentence["emotion_data"] = emotion_result
+
+        if emotion_result["emotion"] == "эмоциональная речь":
+            emotional_speech_count += 1
+
+        total_duration_sec += sentence["end"] - sentence["start"]
+        total_words += len(sentence["text"].split())
+
+    words_per_minute = (
+        round((total_words / total_duration_sec) * 60, settings.FLOAT_ROUND_RATE)
+        if total_duration_sec > 0 else 0.0
+    )
+
+    avg_sentence_length = total_words / len(sentences)
+
+    emotion_percentage = (emotional_speech_count / len(sentences)) * 10
+
+    return SpeechAnalyseResult(
+        temp_rate=words_per_minute,
+        emotion_mark=emotion_percentage,
+        avg_sentences_len=avg_sentence_length
+    ).model_dump()

@@ -1,46 +1,46 @@
-from fastapi import APIRouter, UploadFile
-import io
-import torchaudio
+from fastapi import (
+    APIRouter, 
+    UploadFile, 
+    File, 
+    Depends
+)
 from typing import List
 
 from src.asr import get_asr_prediction
-from src.ser import get_all_emotions_with_speech_rate
-from src.schemas import  SpeechAnalyseResult
+from src.ser import compute_speech_metrics
+from src.schemas import AsrSegment, SpeechAnalyseResult
+from src.routers.utils import prepare_audio, parse_segments_json
 from src.logger import logger
-
 
 
 
 router = APIRouter(prefix="/speech")
 
 
-@router.post("/get_speech_analytics", response_model=SpeechAnalyseResult)
-async def analyze_audio_file(audio_file: UploadFile):
+
+@router.post("/transcribe_speech", response_model=List[AsrSegment])
+async def get_speech_transcription(audio_file: UploadFile):
     
-    audio_data = await audio_file.read()
-    audio_stream = io.BytesIO(audio_data)
-
-    speech_array, _sampling_rate = torchaudio.load(audio_stream)
-    resampler = torchaudio.transforms.Resample(_sampling_rate)
-    speech_array_res = resampler(speech_array).squeeze().numpy()
-
-    if len(speech_array_res.shape) > 1:
-        speech_array_res = speech_array_res[0]
+    speech_array = await prepare_audio(audio_file)
 
     logger.info("Start ASR process")
-    asr_prediction = get_asr_prediction(speech_array_res)
+    transcription = get_asr_prediction(speech_array)
     logger.info("End ASR process")
 
-    logger.info("Start emotion recognition process")
-    emotions_asr, wpe = get_all_emotions_with_speech_rate(
-        speech_array=speech_array_res,
-        sentences=asr_prediction
-    )
-    logger.info("End emotion recognition process")
+    return transcription
 
-    response = SpeechAnalyseResult(
-        speech_segments=emotions_asr,
-        temp_rate=wpe
-    ).model_dump()
+
+@router.post("/get_speech_metrics", response_model=SpeechAnalyseResult)
+async def get_speech_metrics(audio_file: UploadFile = File(...),
+                             text_timestamps: List[AsrSegment] = Depends(parse_segments_json)):
+    
+    speech_array_res = await prepare_audio(audio_file)
+
+    logger.info("Start statistic generation process")
+    response = compute_speech_metrics(
+        speech_array=speech_array_res,
+        sentences=text_timestamps
+    )
+    logger.info("End statistic generation process")
 
     return response
