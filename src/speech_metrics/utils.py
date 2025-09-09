@@ -1,5 +1,5 @@
 import numpy as np
-from src.config import settings
+from src.config import settings, constants
 
 
 
@@ -21,6 +21,10 @@ def pace_to_mark(
 ) -> float:
     """
     Переводит темп речи в 10-балльную шкалу.
+    Оценка строится по принципу "чем ближе к идеальному диапазону — тем выше балл":
+    - Медленно (90–110): линейно от 0 до 7
+    - Идеально (110–150): пик 10 в центре (130), спадает до 7 на границах
+    - Быстро (150–180): линейно от 7 до 0
 
     Args:
         pace (float): темп в ударах в минуту (число)
@@ -28,12 +32,9 @@ def pace_to_mark(
     :return: оценка темпа речи по 10-балльной шкале (float от 1.0 до 10.0)
     """
 
-    min_pace = 90
-    max_pace = 180
+    # Проверяем каждую зону
+    for min_p, max_p, score_fn in constants.pace_zones:
+        if min_p <= pace <= max_p:
+            return score_fn(pace)
 
-    pace = max(min_pace, min(max_pace, pace))
-
-    score = 1.0 + (pace - min_pace) * (10.0 - 1.0) / (max_pace - min_pace)
-    score = round(score, settings.FLOAT_ROUND_RATE)
-
-    return score
+    return 0.0

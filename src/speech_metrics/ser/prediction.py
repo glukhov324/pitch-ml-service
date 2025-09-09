@@ -6,7 +6,7 @@ import torch.nn.functional as F
 from src.speech_metrics.ser.models import feature_extractor, ser_model, config
 from src.speech_metrics.utils import get_audio_interval
 from src.schemas.speech import EmotionPrediction
-from src.config import settings, emotion_type_dict
+from src.config import settings, constants
 
 
 
@@ -35,7 +35,7 @@ def predict_emotion(
 
     scores = F.softmax(logits, dim=1).detach().cpu().numpy()[0]
     outputs = [{
-        "emotion": emotion_type_dict[config.id2label[i]], 
+        "emotion": constants.emotion_type_dict[config.id2label[i]], 
         "score": f"{round(score * 100, settings.FLOAT_ROUND_RATE):.1f}%"
         } for i, score in enumerate(scores)]
 
