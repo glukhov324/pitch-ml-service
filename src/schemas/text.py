@@ -17,7 +17,8 @@ class PitchMarks(BaseModel):
 class CompletePitchMarksBlock(BaseModel):
     marks: PitchMarks
     missing_blocks: List[str]
-    issues: List[str]
+    pros: List[str]
+    cons: List[str]
 
 
 class Advice(BaseModel):
