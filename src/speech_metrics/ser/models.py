@@ -4,8 +4,6 @@ from src.config import settings
 
 
 
-torch.set_num_threads(settings.NUM_THREADS) 
-
 config = AutoConfig.from_pretrained(
     pretrained_model_name_or_path=settings.SER_MODEL_NAME, 
     trust_remote_code=True

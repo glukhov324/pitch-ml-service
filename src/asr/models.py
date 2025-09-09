@@ -14,6 +14,4 @@ whisper_model = WhisperModel(
     model_size_or_path=settings.WHISPER_MODEL_SIZE, 
     device=settings.DEVICE, 
     compute_type=settings.WHISPER_COMPUTE_TYPE,
-    cpu_threads=settings.NUM_THREADS,
-    num_workers=settings.NUM_WORKERS
 )
