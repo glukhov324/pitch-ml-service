@@ -33,8 +33,6 @@ class Settings(BaseSettings):
     FLOAT_ROUND_RATE: int = Field(2)
     SER_MODEL_NAME: str
     SER_SAMPLING_RATE: int
-    MIN_PACE: float = Field(90.0)
-    MAX_PACE: float = Field(180.0)
 
     # LLM
     OPENROUTER_API_KEY: str
