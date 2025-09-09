@@ -20,6 +20,7 @@ class AsrEmotionSegment(AsrSegment):
     emotion_data: EmotionPrediction
 
 class SpeechAnalyseResult(BaseModel):
-    temp_rate: float
+    pace_rate: float
+    pace_mark: float
     emotion_mark: float
     avg_sentences_len: float

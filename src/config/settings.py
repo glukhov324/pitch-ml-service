@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     LOG_FILE: str = Field("logs.log")
     LOG_LEVEL: int = logging.INFO
 
-    # # Speech models
+    # Speech models
     DEVICE: str = Field("cuda" if torch.cuda.is_available() else "cpu")
     NUM_WORKERS: int = Field(2)
     NUM_THREADS: int = Field(2)
@@ -33,6 +33,8 @@ class Settings(BaseSettings):
     FLOAT_ROUND_RATE: int = Field(2)
     SER_MODEL_NAME: str
     SER_SAMPLING_RATE: int
+    MIN_PACE: float = Field(90.0)
+    MAX_PACE: float = Field(180.0)
 
     # LLM
     OPENROUTER_API_KEY: str

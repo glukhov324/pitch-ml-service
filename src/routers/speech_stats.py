@@ -7,7 +7,7 @@ from fastapi import (
 from typing import List
 
 from src.asr import get_asr_prediction
-from src.ser import compute_speech_metrics
+from src.speech_metrics import compute_speech_metrics
 from src.schemas import AsrSegment, SpeechAnalyseResult
 from src.routers.utils import prepare_audio, parse_segments_json
 from src.logger import logger
@@ -19,7 +19,9 @@ router = APIRouter(prefix="/speech")
 
 
 @router.post("/transcribe_speech", response_model=List[AsrSegment])
-async def get_speech_transcription(audio_file: UploadFile):
+async def get_speech_transcription(
+    audio_file: UploadFile = File(...)
+):
     
     speech_array = await prepare_audio(audio_file)
 
@@ -31,8 +33,10 @@ async def get_speech_transcription(audio_file: UploadFile):
 
 
 @router.post("/get_speech_metrics", response_model=SpeechAnalyseResult)
-async def get_speech_metrics(audio_file: UploadFile = File(...),
-                             asr_result: List[AsrSegment] = Depends(parse_segments_json)):
+async def get_speech_metrics(
+    audio_file: UploadFile = File(...),
+    asr_result: List[AsrSegment] = Depends(parse_segments_json)
+):
     
     speech_array_res = await prepare_audio(audio_file)
 

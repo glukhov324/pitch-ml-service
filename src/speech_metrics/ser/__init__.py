@@ -1,0 +1,1 @@
+from src.speech_metrics.ser.prediction import predict_emotion

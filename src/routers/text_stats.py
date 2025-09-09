@@ -15,7 +15,9 @@ router = APIRouter(prefix="/text")
 
 
 @router.post("/get_pitch_text_analytics", response_model=PitchEvaluationResult)
-async def analyze_pitch_text(text: str):
+async def analyze_pitch_text(
+    text: str
+):
     
     response = pitch_text_analyze_pipeline(
         base_text=text
@@ -40,9 +42,11 @@ async def analyze_pitch_text(text: str):
 
 
 @router.post("/get_questions_text_presentation", response_model=QuestionGeneration)
-async def get_questions_text_presentation(text: str,
-                                          n_questions: int,
-                                          presentation: UploadFile | None = None):
+async def get_questions_text_presentation(
+    text: str,
+    n_questions: int,
+    presentation: UploadFile | None = None
+):
     
     slides_data = None
     if presentation:
