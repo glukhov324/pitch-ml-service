@@ -14,11 +14,16 @@ class PitchMarks(BaseModel):
     persuasiveness: int
 
 
-class CompletePitchMarksBlock(BaseModel):
+class FillerWord(BaseModel):
+    word: str
+    count: int
+
+
+class PitchTextAnalyticsResult(BaseModel):
     marks: PitchMarks
-    missing_blocks: List[str]
-    pros: List[str]
-    cons: List[str]
+    filler_words: List[FillerWord] | None = None
+    hesitant_phrases: List[str] | None = None
+    unclarity_moments: List[str] | None = None
 
 
 class Advice(BaseModel):
@@ -27,12 +32,6 @@ class Advice(BaseModel):
     reason: str
     todo: str
     example: str
-
-
-class PitchEvaluationResult(BaseModel):
-    pitch_evaluation: CompletePitchMarksBlock
-    advices: List[Advice]
-    pitch_summary: str
 
 
 class QuestionGeneration(BaseModel):

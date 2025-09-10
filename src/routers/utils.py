@@ -1,15 +1,18 @@
 from fastapi import UploadFile, Form, HTTPException
+from src.llm.utils import get_slides_data
 import io
 import torchaudio
 import numpy as np
-from typing import List
+from typing import List, Dict
 import json
 
 from src.schemas import AsrSegment
 
 
 
-async def prepare_audio(audio_file: UploadFile) -> np.ndarray:
+async def prepare_audio(
+    audio_file: UploadFile
+) -> np.ndarray:
     
     audio_data = await audio_file.read()
     audio_stream = io.BytesIO(audio_data)
@@ -22,6 +25,19 @@ async def prepare_audio(audio_file: UploadFile) -> np.ndarray:
         speech_array_res = speech_array_res[0]
     
     return speech_array_res
+
+
+async def prepare_presentation(
+    pptx_data: UploadFile
+) -> List[Dict[str, int | str]]:
+    
+    pptx_data = await pptx_data.read()
+    pptx_bytes = io.BytesIO(pptx_data)
+    slides_data = get_slides_data(
+        pptx_bytes=pptx_bytes
+    )
+
+    return slides_data
 
 
 def parse_segments_json(

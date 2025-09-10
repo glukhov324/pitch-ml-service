@@ -18,7 +18,10 @@ router = APIRouter(prefix="/speech")
 
 
 
-@router.post("/transcribe_speech", response_model=List[AsrSegment])
+@router.post(
+    path="/transcribe_speech", 
+    response_model=List[AsrSegment]
+)
 async def get_speech_transcription(
     audio_file: UploadFile = File(...)
 ):
@@ -32,7 +35,10 @@ async def get_speech_transcription(
     return transcription
 
 
-@router.post("/get_speech_metrics", response_model=SpeechAnalyseResult)
+@router.post(
+    path="/get_speech_metrics", 
+    response_model=SpeechAnalyseResult
+)
 async def get_speech_metrics(
     audio_file: UploadFile = File(...),
     asr_result: List[AsrSegment] = Depends(parse_segments_json)

@@ -15,11 +15,12 @@ EVALUATE_TEMPLATE = Template(
 - "ясность (clarity)": простота языка, отсутствие сложных конструкций, читаемость
 - "конкретика (specificity)": наличие фактов, цифр, сроков, сравнений
 - "убедительность (persuasiveness)": выгода для аудитории, сила аргументов, чёткий следующий шаг
+- "уверенность формулировок (confidence)": уровень уверенности формулировок
 
 Также верни:
-- "отсутствующие_блоки (missing_blocks)": какие структурные блоки отсутствуют (из: "вступление","проблема","решение","доказательства","ценность","призыв")
-- "плюсы текста выступления (pros)": список выделенных тобой плюсов текста выступления
-- "минусы текста выступления (cons)": список выделенных тобой минусов текста выступления
+- "топ-3 слов филлеров, например, эээ, ааа и тд (fillers_words)": список словарей, структура которых состоит из слова и его повторений. Пример: {'word': 'ээ', 'count': 15}
+- "неуверенные фразы по формулировкам (hesitant_phrases)": список неуверенных фраз из текста выстпуления
+- "непонятные моменты из текста выступления, суть которых ты не понял (unclarity_moments)": список непонятных моментов выступления
 
 Контекст:
 $context_json
@@ -27,16 +28,20 @@ $context_json
 Формат ответа (строго JSON):
 {
   "marks": {"structure":0,"clarity":0,"specificity":0,"persuasiveness":0},
-  "missing_blocks": [],
-  "pros": [],
-  "cons": []
+  "fillers_words": [{'word': 'ээ', 'count': 15}, {'word': 'эм', 'count': 10}, {'word': 'ааа', 'count': 7}]
+  "hesitant_phrases": [],
+  "unclarity_moments": []
 }
 Только JSON.
 """
+
 )
 
-def evaluate_presentation(context: Dict[str, Any]) -> Dict[str, Any]:
+def evaluate_pitch_text(base_text: str) -> Dict[str, Any]:
 
+    context = {
+        "pitch_text": base_text.strip()
+    }
     ctx_json = json.dumps(context, ensure_ascii=False)
     prompt = EVALUATE_TEMPLATE.substitute(context_json=ctx_json)
     messages = [

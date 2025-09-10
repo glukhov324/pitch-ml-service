@@ -3,6 +3,7 @@ import json
 from src.llm.base_prompts import SYS_JSON
 from src.llm.utils import extract_first_json
 from src.llm.openrouter import call_openrouter
+from src.logger import logger
 
 
 
@@ -33,6 +34,8 @@ def generate_questions_text_presenation(speech_text: str,
         {"role": "system", "content": SYS_JSON},
         {"role": "user", "content": prompt}
     ]
-
+    logger.info("Start questions generation process")
     raw = call_openrouter(messages, temperature=0.1, max_tokens=400)
+    logger.info("End questions generation process")
+
     return extract_first_json(raw)

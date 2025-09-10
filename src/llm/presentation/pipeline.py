@@ -1,4 +1,5 @@
 import io
+from typing import List, Dict
 
 from src.llm.utils import get_slides_data
 from src.llm.presentation.compute_presentation_metrics import compute_ppt_metrics
@@ -8,14 +9,13 @@ from src.logger import logger
 
 
 
-def presentation_analyze_pipeline(speech_text: str,
-                                  pptx_bytes: io.BytesIO):
+def presentation_analyze_pipeline(
+    speech_text: str,
+    slides_data: List[Dict[str, int | str]]
+):
     """
     Анализируем PPTX (извлечение → базовые метрики → DeepSeek-оценка соответствия/баланса)
     """
-
-    slides_data = get_slides_data(pptx_bytes)
-    logger.info("Presntation loaded")
 
     logger.info("Start computing presntation metrics procces")
     ppt_metrics = compute_ppt_metrics(slides_data)
@@ -29,4 +29,5 @@ def presentation_analyze_pipeline(speech_text: str,
         "presentation_metrics": ppt_metrics,
         "llm_report": ppt_llm             
     }
+    
     return unified

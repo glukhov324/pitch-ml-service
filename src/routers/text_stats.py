@@ -2,11 +2,11 @@ from fastapi import APIRouter, UploadFile
 import io
 
 from src.logger import logger
-from src.llm.utils import get_slides_data
-from src.llm.pitch_text import pitch_text_analyze_pipeline
-from src.llm.presentation.pipeline import presentation_analyze_pipeline
+from src.routers.utils import prepare_presentation
+from src.llm.pitch_text import evaluate_pitch_text
+from src.llm.presentation import presentation_analyze_pipeline
 from src.llm import generate_questions_text_presenation
-from src.schemas import PitchEvaluationResult, QuestionGeneration
+from src.schemas import PitchTextAnalyticsResult, QuestionGeneration
 
 
 
@@ -14,31 +14,35 @@ from src.schemas import PitchEvaluationResult, QuestionGeneration
 router = APIRouter(prefix="/text")
 
 
-@router.post("/get_pitch_text_analytics", response_model=PitchEvaluationResult)
-async def analyze_pitch_text(
+@router.post(
+    path="/get_text_analytics", 
+    response_model=PitchTextAnalyticsResult
+)
+async def analyze_text(
     text: str
 ):
     
-    response = pitch_text_analyze_pipeline(
+    response = evaluate_pitch_text(
         base_text=text
     )
 
     return response
 
 
-# @router.post("/get_presentation_analytics")
-# async def analyze_pitch_text(text: str,
-#                              presentation: UploadFile):
+@router.post(
+    path="/get_presentation_pitch_analytics"
+)
+async def analyze_presentation_pitch_text(text: str,
+                                          presentation: UploadFile):
     
-#     pptx_data = await presentation.read()
-#     pptx_bytes = io.BytesIO(pptx_data)
+    slides_data = await prepare_presentation(presentation)
 
-#     response = presentation_analyze_pipeline(
-#         speech_text=text,
-#         pptx_bytes=pptx_bytes
-#     )
+    response = presentation_analyze_pipeline(
+        speech_text=text,
+        pptx_bytes=slides_data
+    )
 
-#     return response
+    return response
 
 
 @router.post("/get_questions_text_presentation", response_model=QuestionGeneration)
@@ -50,16 +54,12 @@ async def get_questions_text_presentation(
     
     slides_data = None
     if presentation:
-        pptx_data = await presentation.read()
-        pptx_bytes = io.BytesIO(pptx_data)
-        slides_data = get_slides_data(pptx_bytes)
+        slides_data = await prepare_presentation(presentation)
     
-    logger.info("Start questions generation process")
     response = generate_questions_text_presenation(
         speech_text=text,
         n_questions=n_questions,
         slides_data=slides_data
     )
-    logger.info("End questions generation process")
 
     return response
