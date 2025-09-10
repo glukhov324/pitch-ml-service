@@ -39,7 +39,7 @@ class Settings(BaseSettings):
     OPENROUTER_URL: str
     MODEL_ID: str
     TEMPERATURE: float = Field(0.2)
-    MAX_TOKENS: int = Field(200)
+    MAX_TOKENS: int = Field(1200)
     OPENROUTER_RETRIES: int = Field(2)
     OPENROUTER_TIMEOUT: int = Field(120)
 

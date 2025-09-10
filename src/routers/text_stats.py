@@ -2,12 +2,16 @@ from fastapi import APIRouter, UploadFile
 
 from src.logger import logger
 from src.routers.utils import prepare_presentation
-from src.llm.pitch_text import evaluate_pitch_text, generate_feedback
-from src.llm.presentation import presentation_analyze_pipeline
-from src.llm import generate_questions_text_presenation
-from src.schemas import PitchTextAnalyticsResult, QuestionGeneration, TextPresentationFeedback
-
-
+from src.llm import (
+    evaluate_pitch_text,
+    generate_feedback,
+    generate_questions_text_presenation
+)
+from src.schemas import (
+    PitchTextAnalyticsResult,
+    QuestionGeneration,
+    TextPresentationFeedback
+)
 
 
 router = APIRouter(prefix="/text")

@@ -18,7 +18,6 @@ def call_openrouter(messages: List[Dict[str, str]],
     headers = {
         "Authorization": f"Bearer {settings.OPENROUTER_API_KEY}",
         "Content-Type": "application/json",
-        # опционально (участвуют в рейтингах на openrouter.ai):
         "HTTP-Referer": "http://localhost",
         "X-Title": "Speech-Coach-RU",
     }

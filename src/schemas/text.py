@@ -30,15 +30,8 @@ class TextPresentationFeedback(BaseModel):
     pros: List[str]
     cons: List[str]
     recommendations: List[str]
-
-
-class Advice(BaseModel):
-    title: str
-    importance: str
-    reason: str
-    todo: str
-    example: str
-
+    feedback: str
+    
 
 class QuestionGeneration(BaseModel):
     questions: List[str]

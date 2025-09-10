@@ -1,6 +1,6 @@
 import json
 
-from src.llm.base_prompts import SYS_JSON
+from src.config import constants, settings
 from src.llm.utils import extract_first_json
 from src.llm.openrouter import call_openrouter
 from src.logger import logger
@@ -21,7 +21,7 @@ def generate_feedback(
 Вот извлечённые данные о слайдах (Может быть None, так как загрузка презентации опциональна):
 {processed_slides_data}
 
-Сгенерируй список плюсов (максимум 5), список минусов (максимум 5) для выступления (максимум 5). Текст выступления и презентация
+Сгенерируй список плюсов (максимум 5), список минусов (максимум 5) для выступления (максимум 5), общая обратная связь (feedback). Текст выступления и презентация
 Сформируй СТРОГО JSON! :
 {{
   "pros": [
@@ -35,15 +35,19 @@ def generate_feedback(
   "recommendations": [
     "...",
     "...",
-  ]
+  ],
+  "feedback": ""
 }}
 """
     messages = [
-        {"role": "system", "content": SYS_JSON},
+        {"role": "system", "content": constants.SYS_JSON},
         {"role": "user", "content": prompt}
     ]
     logger.info("Start recommendation generation process")
-    raw = call_openrouter(messages, temperature=0.1, max_tokens=1200)
+    raw = call_openrouter(
+        messages=messages, 
+        temperature=settings.TEMPERATURE, 
+        max_tokens=settings.MAX_TOKENS)
     logger.info("End recommendation generation process")
 
     logger.info(raw)

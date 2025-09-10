@@ -2,7 +2,7 @@ from string import Template
 from typing import Dict, Any
 import json
 
-from src.llm.base_prompts import SYS_JSON
+from src.config import constants, settings
 from src.llm.utils import extract_first_json
 from src.llm.openrouter import call_openrouter
 
@@ -45,9 +45,13 @@ def evaluate_pitch_text(pitch_text: str) -> Dict[str, Any]:
     ctx_json = json.dumps(context, ensure_ascii=False)
     prompt = EVALUATE_TEMPLATE.substitute(context_json=ctx_json)
     messages = [
-        {"role": "system", "content": SYS_JSON},
+        {"role": "system", "content": constants.SYS_JSON},
         {"role": "user", "content": prompt}
     ]
-    raw = call_openrouter(messages, temperature=0.1, max_tokens=400)
+    raw = call_openrouter(
+        messages=messages, 
+        temperature=settings.TEMPERATURE, 
+        max_tokens=settings.MAX_TOKENS
+    )
     
     return extract_first_json(raw)
