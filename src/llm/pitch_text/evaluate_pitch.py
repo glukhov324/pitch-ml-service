@@ -37,10 +37,10 @@ $context_json
 
 )
 
-def evaluate_pitch_text(base_text: str) -> Dict[str, Any]:
+def evaluate_pitch_text(pitch_text: str) -> Dict[str, Any]:
 
     context = {
-        "pitch_text": base_text.strip()
+        "pitch_text": pitch_text.strip()
     }
     ctx_json = json.dumps(context, ensure_ascii=False)
     prompt = EVALUATE_TEMPLATE.substitute(context_json=ctx_json)

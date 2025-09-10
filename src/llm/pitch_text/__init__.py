@@ -1,1 +1,2 @@
 from src.llm.pitch_text.evaluate_pitch import evaluate_pitch_text
+from src.llm.pitch_text.build_recommendations import generate_feedback
