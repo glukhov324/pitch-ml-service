@@ -1,4 +1,5 @@
 import numpy as np
+import torch
 
 from src.asr.models import whisper_model
 from src.asr.utils import segments_to_sentences
@@ -8,6 +9,8 @@ from src.config import settings
 
 def get_asr_prediction(speech_array: np.ndarray):
     
+    # speech_array = torch.from_numpy(speech_array)
+    # speech_array = speech_array.to(settings.DEVICE)
     segments, _ = whisper_model.transcribe(
         audio=speech_array, 
         beam_size=settings.WHISPER_BEAM_SIZE,

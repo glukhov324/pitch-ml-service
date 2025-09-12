@@ -1,5 +1,7 @@
 from fastapi import APIRouter
+
 from src.schemas import Msg
+from src.config import settings
 
 
 router = APIRouter(
@@ -9,6 +11,7 @@ router = APIRouter(
 
 @router.get("/health_check", response_model=Msg)
 def health_check():
+    
     return Msg(
-        msg="OK"
+        msg=f"OK {settings.DEVICE}"
     ).model_dump()

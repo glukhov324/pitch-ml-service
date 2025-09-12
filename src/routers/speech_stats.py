@@ -14,7 +14,9 @@ from src.logger import logger
 
 
 
-router = APIRouter(prefix="/speech")
+router = APIRouter(
+    prefix="/speech"
+)
 
 
 

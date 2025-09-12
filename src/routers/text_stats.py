@@ -5,7 +5,8 @@ from src.routers.utils import prepare_presentation
 from src.llm import (
     evaluate_pitch_text,
     generate_feedback,
-    generate_questions_text_presenation
+    generate_questions_text_presenation,
+    get_fillers
 )
 from src.schemas import (
     PitchTextAnalyticsResult,
@@ -25,11 +26,17 @@ async def analyze_text(
     text: str
 ):
     
-    response = evaluate_pitch_text(
+    evaluation = evaluate_pitch_text(
         pitch_text=text
     )
+    fillers = get_fillers(
+        pitch_text=text
+    )
+    logger.info(fillers)
 
-    return response
+    evaluation["filler_words"] = fillers
+
+    return evaluation
 
 
 @router.post(
