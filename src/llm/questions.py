@@ -30,12 +30,12 @@ def generate_questions_text_presenation(speech_text: str,
 - если есть слайды — учитывай и текст, и слайды.
 
 Формат ответа:
-{
+{{
   "questions": [
     "...",
     "...",
   ]
-}
+}}
 """
     messages = [
         {"role": "system", "content": constants.SYS_JSON},

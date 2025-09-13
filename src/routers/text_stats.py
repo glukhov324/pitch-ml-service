@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile
+from fastapi import APIRouter, UploadFile, File
 
 from src.logger import logger
 from src.routers.utils import prepare_presentation
@@ -45,7 +45,7 @@ async def analyze_text(
 )
 async def get_text_presentation_feedback(
     text: str,
-    presentation: UploadFile | None = None
+    presentation: UploadFile | str | None = None
 ):
 
     slides_data = None
@@ -69,7 +69,7 @@ async def get_text_presentation_feedback(
 async def get_questions_text_presentation(
     text: str,
     n_questions: int,
-    presentation: UploadFile | None = None
+    presentation: UploadFile | str | None = None
 ):
     
     slides_data = None
